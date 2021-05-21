@@ -411,10 +411,10 @@ impl<T: Host> PluginLoader<T> {
     ///     `/Library/Audio/Plug-Ins/VST/iZotope Ozone 5.vst/Contents/MacOS/PluginHooksVST`
     pub fn load(path: &Path, host: Arc<Mutex<T>>) -> Result<PluginLoader<T>, PluginLoadError> {
         // Try loading the library at the given path
-        let lib = match Library::new(path) {
+        let lib = unsafe { match Library::new(path) {
             Ok(l) => l,
             Err(_) => return Err(PluginLoadError::InvalidPath),
-        };
+        }};
 
         Ok(PluginLoader {
             main: unsafe {
